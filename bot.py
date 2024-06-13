@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+HR_TELEGRAM_ID = os.getenv("HR_TELEGRAM_ID")
 
 # configure logging
 logging.basicConfig(
@@ -17,9 +18,6 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
-
-# constants
-HR_MANAGER_ID = 992519627
 
 CONTROL_CANCEL = '❌ Bekor qilish'
 CONTROL_BACK = 'Orqaga qaytish ↩️'
@@ -149,9 +147,9 @@ async def confirmed(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         f"Position: {context.user_data['position']}\n"
         # f"Resume: {context.user_data['resume']}"
     )
-    await context.bot.send_message(chat_id=HR_MANAGER_ID, text=hr_message)
+    await context.bot.send_message(chat_id=HR_TELEGRAM_ID, text=hr_message)
     await context.bot.forward_message(
-        chat_id=HR_MANAGER_ID, 
+        chat_id=HR_TELEGRAM_ID, 
         from_chat_id=update.message.chat_id, 
         message_id=context.user_data['resume']
     )
