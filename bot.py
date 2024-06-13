@@ -1,7 +1,14 @@
+import os
 import logging
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import Application, ContextTypes, CommandHandler, MessageHandler, CallbackContext, ConversationHandler, filters
 from pymongo import MongoClient
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # configure logging
 logging.basicConfig(
@@ -12,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 
 # constants
-BOT_TOKEN = '7078276780:AAG3y8pwJVB7h3Rxp_W1ypZZiTDd6iNOEbo'
 HR_MANAGER_ID = 992519627
 
 CONTROL_CANCEL = '❌ Bekor qilish'

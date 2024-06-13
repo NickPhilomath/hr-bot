@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 python-telegram-bot = "^21.2"
 pymongo = "^4.7.2"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
