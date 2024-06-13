@@ -6,3 +6,4 @@ services:
     command: poetry run python bot.py
     volumes:
       - .:/app
+    restart: always

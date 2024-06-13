@@ -1,8 +1,16 @@
 import os
 import logging
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
-from telegram.ext import Application, ContextTypes, CommandHandler, MessageHandler, CallbackContext, ConversationHandler, filters
-from pymongo import MongoClient
+from telegram.ext import (
+    Application,
+    ContextTypes,
+    CommandHandler,
+    MessageHandler,
+    CallbackContext,
+    ConversationHandler,
+    filters,
+)
+from telegram.error import BadRequest
 
 from dotenv import load_dotenv
 
@@ -47,14 +55,8 @@ TEXT_CONFIRMED = "✅ Murojaat qilganingiz uchun tashakkur. Biz sizning arizangi
 
 TEXT_CANCELLED = "Ariza berish jarayoni bekor qilindi. Qayta ishga tushuring uchun /start bosing."
 
-# MongoDB setup
-# client = MongoClient('mongodb://localhost:27017/')
-# db = client.hr_bot
-# applications = db.applications
-
 
 INTRO_GENDER, POSITION, NAME, PHONE, RESUME, CONFIRMATION, CONFIRMED = range(7)
-
 
 
 def get_reply_keys_layout(keys = None):
@@ -147,12 +149,15 @@ async def confirmed(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         f"Position: {context.user_data['position']}\n"
         # f"Resume: {context.user_data['resume']}"
     )
-    await context.bot.send_message(chat_id=HR_TELEGRAM_ID, text=hr_message)
-    await context.bot.forward_message(
-        chat_id=HR_TELEGRAM_ID, 
-        from_chat_id=update.message.chat_id, 
-        message_id=context.user_data['resume']
-    )
+    try:
+        await context.bot.send_message(chat_id=HR_TELEGRAM_ID, text=hr_message)
+        await context.bot.forward_message(
+            chat_id=HR_TELEGRAM_ID, 
+            from_chat_id=update.message.chat_id, 
+            message_id=context.user_data['resume']
+        )
+    except BadRequest:
+        logger.error(f"cannot forward to hr admin: {HR_TELEGRAM_ID}")
     return ConversationHandler.END
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
